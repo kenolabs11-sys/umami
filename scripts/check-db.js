@@ -15,13 +15,6 @@ if (process.env.SKIP_DB_CHECK) {
 
 const url = new URL(process.env.DATABASE_URL);
 
-// Preview-only diagnostic: log just the public DNS provider suffix, never the connection URL.
-if (process.env.VERCEL_ENV === 'preview') {
-  const hostParts = url.hostname.toLowerCase().split('.').filter(Boolean);
-  const providerSuffix = hostParts.length >= 2 ? hostParts.slice(-2).join('.') : 'unknown';
-  console.log(`[UMAMI_PREVIEW_PROVIDER_SUFFIX] ${providerSuffix}`);
-}
-
 const adapter = new PrismaPg(
   { connectionString: url.toString() },
   { schema: url.searchParams.get('schema') },
