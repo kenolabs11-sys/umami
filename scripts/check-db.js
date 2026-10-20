@@ -70,12 +70,7 @@ async function checkDatabaseVersion() {
 }
 
 async function applyMigration() {
-  if (process.env.VERCEL_ENV === 'preview' && process.env.UMAMI_TEST_MIGRATIONS === '1') {
-    const marker = await prisma.$queryRawUnsafe('SELECT proof FROM public.umami_upgrade_test_branch_guard_20261020 LIMIT 1');
-    if (!Array.isArray(marker)) throw new Error('Missing isolated test branch guard');
-    console.log('Isolated Neon test branch guard verified.');
-  }
-  if (process.env.UMAMI_TEST_MIGRATIONS === '1' || !process.env.SKIP_DB_MIGRATION) {
+  if (!process.env.SKIP_DB_MIGRATION) {
     const directUrl = process.env.DIRECT_DATABASE_URL || process.env.DATABASE_URL;
     console.log(
       execSync('prisma migrate deploy', {
